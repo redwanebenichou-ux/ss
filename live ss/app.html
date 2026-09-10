@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>try{(function(){var t=localStorage.getItem('ls_theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();}catch(e){}</script>
+<title>LiveSight — لوحة التحكم</title>
+<link rel="icon" href="assets/icons/logo-192.png">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body class="app-page">
+<div class="splash app-splash" id="splash">
+  <img src="assets/img/logo.png" alt="">
+  <h1>Live<b>Sight</b></h1>
+  <p data-i18n="tagline"></p>
+</div>
+<div class="shell">
+  <div class="main">
+    <header class="topbar">
+      <img class="top-logo" src="assets/img/logo.png" alt="">
+      <div class="crumb" id="crumb"></div>
+      <div class="sp"></div>
+      <div class="top-search" id="topSearch">
+        <i class="icn" data-ic="search"></i><input id="globalSearch" placeholder="">
+      </div>
+      <div class="lang-toggle">
+        <button data-lang-btn="ar">ع</button>
+        <button data-lang-btn="fr">FR</button>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="theme" style="margin-inline-end:8px"></button>
+      <a class="icon-btn" href="#" data-route="notifications" onclick="return false"><i class="icn" data-ic="bell"></i><span class="badge-count" data-notif-badge style="display:none"></span></a>
+      <a href="#" id="topAvatar" data-route="profile" style="display:inline-flex"></a>
+    </header>
+    <section class="content">
+      <div class="content-inner" id="view"></div>
+    </section>
+  </div>
+</div>
+
+<nav class="bottom-nav" id="bottomNav">
+  <a href="#" class="bn-item" data-route="dashboard"><i class="icn" data-ic="dashboard"></i><span data-i18n="dashboard"></span></a>
+  <a href="#" class="bn-item" data-route="tasks"><i class="icn" data-ic="tasks"></i><span data-i18n="tasks"></span></a>
+  <a href="#" class="bn-item" data-route="tasks/available"><i class="icn" data-ic="available"></i><span data-i18n="available"></span></a>
+  <a href="#" class="bn-item" data-route="requests"><i class="icn" data-ic="requests"></i><span data-i18n="requests"></span></a>
+  <a href="#" class="bn-item" data-route="map"><i class="icn" data-ic="map"></i><span data-i18n="map"></span></a>
+  <a href="#" class="bn-item" data-route="chats"><i class="icn" data-ic="chats"></i><span data-i18n="chats"></span><span class="badge-count" data-chat-badge style="display:none"></span></a>
+  <a href="#" class="bn-item" data-route="profile"><i class="icn" data-ic="profile"></i><span data-i18n="profile"></span></a>
+</nav>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/router.js"></script>
+<script src="assets/js/maps.js"></script>
+<script src="assets/js/qr.js"></script>
+<script src="assets/js/csv.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  const sess=Auth.guard('user');
+  if(!sess){ document.body.innerHTML=''; }
+  else {
+    Layout.mountSidebar('user');
+    I18n.mount();
+    const me=Store.db().users.find(u=>u.id===sess.userId);
+    document.getElementById('topAvatar').innerHTML=`<div class="avatar" style="width:38px;height:38px;border-radius:12px">${Helpers.initials(Helpers.userName(me))}</div>`;
+    Layout.refreshBadges();
+    Auth.startAutoLock();
+    LockScreen.check();
+    const gs=document.getElementById('globalSearch');
+    gs.placeholder = I18n.t('search')+' …';
+    gs.addEventListener('keydown',e=>{ if(e.key==='Enter'){ AppView._af={q:gs.value.trim()}; Router.go('tasks/available'); } });
+    document.addEventListener('click',()=>Auth.touch());
+    if(!location.hash) location.hash = '#/dashboard';
+    Router.run();
+    if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+
+    (function(){
+      var btn=document.getElementById('themeBtn'); if(!btn) return;
+      var root=document.documentElement;
+      var SUN='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+      var MOON='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+      function render(){ btn.innerHTML = root.getAttribute('data-theme')==='dark' ? SUN : MOON; }
+      render();
+      btn.addEventListener('click',function(){
+        var nxt = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', nxt);
+        try{ localStorage.setItem('ls_theme', nxt); }catch(e){}
+        render();
+      });
+    })();
+  }
+</script>
+<script>window.addEventListener('load',function(){setTimeout(function(){var s=document.getElementById('splash');if(s)s.classList.add('hide');},600);});setTimeout(function(){var s=document.getElementById('splash');if(s)s.classList.add('hide');},2700);</script>
+</body>
+</html>

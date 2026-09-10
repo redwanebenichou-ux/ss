@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>try{(function(){var t=localStorage.getItem('ls_theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();}catch(e){}</script>
+<title>LiveSight — إدارة</title>
+<link rel="icon" href="assets/icons/logo-192.png">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="shell admin-shell">
+  <aside class="admin-side" id="aside">
+    <a class="logo" href="#" data-route="overview" onclick="return false">
+      <img src="assets/img/logo.png" alt=""><span class="name"><b>Live</b>Sight <b class="admin-b">ADMIN</b></span>
+    </a>
+<nav class="nav">
+      <a href="#" data-route="overview"><i class="icn" data-ic="dashboard"></i><span data-i18n="overview"></span></a>
+      <a href="#" data-route="users"><i class="icn" data-ic="users"></i><span data-i18n="users"></span></a>
+      <a href="#" data-route="tasks"><i class="icn" data-ic="tasks"></i><span data-i18n="tasks"></span></a>
+      <a href="#" data-route="disputes"><i class="icn" data-ic="flag"></i><span data-i18n="disputes"></span></a>
+      <a href="#" data-route="categories"><i class="icn" data-ic="categories"></i><span data-i18n="categories"></span></a>
+      <a href="#" data-route="wilayas"><i class="icn" data-ic="wilayas"></i><span data-i18n="wilayas"></span></a>
+      <a href="#" data-route="transactions"><i class="icn" data-ic="transactions"></i><span data-i18n="transactions"></span></a>
+      <a href="#" data-route="ratings"><i class="icn" data-ic="ratings"></i><span data-i18n="ratings"></span></a>
+      <a href="#" data-route="verification"><i class="icn" data-ic="shield"></i><span data-i18n="verification"></span></a>
+      <a href="#" data-route="audit"><i class="icn" data-ic="logBook"></i><span data-i18n="audit"></span></a>
+      <a href="#" data-route="settings"><i class="icn" data-ic="settings"></i><span data-i18n="adminSettings"></span></a>
+    </nav>
+    <div class="foot">
+      <a href="app.html" class="flex" style="padding:10px 13px;font-weight:700;font-size:13px;color:var(--teal)"><i class="icn" data-ic="eye"></i> <span data-i18n="userView"></span></a>
+      <a href="login.html" class="flex" style="padding:10px 13px;font-weight:700;font-size:13.5px;color:var(--danger)"><i class="icn" data-ic="logout"></i> <span data-i18n="logout"></span></a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn burger" data-burger="1">☰</button>
+      <div class="crumb" id="crumb"></div>
+      <div class="sp"></div>
+      <div class="lang-toggle">
+        <button data-lang-btn="ar">ع</button>
+        <button data-lang-btn="fr">FR</button>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="theme"></button>
+      <div class="avatar" style="width:38px;height:38px;border-radius:12px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+    </header>
+    <section class="content">
+      <div class="content-inner" id="view"></div>
+    </section>
+  </div>
+</div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/router.js"></script>
+<script src="assets/js/maps.js"></script>
+<script src="assets/js/csv.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/admin.js"></script>
+<script>
+  const sess=Auth.guard('admin');
+  if(sess){
+    I18n.mount();
+    Layout.mountSidebar('admin');
+    document.addEventListener('click',()=>Auth.touch());
+    if(!location.hash) location.hash = '#/overview';
+    Router.run();
+    if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+
+    (function(){
+      var btn=document.getElementById('themeBtn'); if(!btn) return;
+      var root=document.documentElement;
+      var SUN='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+      var MOON='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+      function render(){ btn.innerHTML = root.getAttribute('data-theme')==='dark' ? SUN : MOON; }
+      render();
+      btn.addEventListener('click',function(){
+        var nxt = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', nxt);
+        try{ localStorage.setItem('ls_theme', nxt); }catch(e){}
+        render();
+        if(window.AdminView&&AdminView.refreshLang){ setTimeout(function(){ AdminView.refreshLang(); }, 120); }
+      });
+    })();
+  }
+</script>
+</body>
+</html>

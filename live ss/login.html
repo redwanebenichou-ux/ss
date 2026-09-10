@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>try{(function(){var t=localStorage.getItem('ls_theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();}catch(e){}</script>
+<title>LiveSight — دخول</title>
+<link rel="icon" href="assets/icons/logo-192.png">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<div class="login-wrap">
+  <aside class="login-brand">
+    <div class="inner">
+      <div class="kicker"><span class="pulse-dot"></span><span data-i18n="live"></span> · <span data-i18n="tagline"></span></div>
+      <h1 data-i18n="platformSlogan"></h1>
+      <p data-i18n="loginSub"></p>
+      <div class="stats">
+        <div><div class="num" id="statUsers">—</div><div class="lbl" data-i18n="activeUsers"></div></div>
+        <div><div class="num" id="statTasks">—</div><div class="lbl" data-i18n="tasksExecutedLast30"></div></div>
+        <div><div class="num" id="statCreated">—</div><div class="lbl" data-i18n="tasksCreatedLast30"></div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="login-panel">
+    <div class="login-box">
+      <div class="head">
+        <div class="logo"><img src="assets/img/logo.png" alt=""><span class="name"><b>Live</b>Sight</span></div>
+        <h2 data-i18n="login"></h2>
+        <div class="sub" data-i18n="welcomePrompt"></div>
+      </div>
+
+      <div class="role-tabs">
+        <button data-role="user" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span data-i18n="roleUser"></span></button>
+        <button data-role="admin"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span data-i18n="roleAdmin"></span></button>
+      </div>
+
+      <form id="loginForm">
+        <div class="field mb"><label data-i18n="email"></label>
+          <input id="lemail" type="email" autocomplete="email" placeholder="you@mail.dz"></div>
+        <div class="field mb"><label data-i18n="password"></label>
+          <input id="lpass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+        <div class="err-msg" data-i18n="wrongCreds"></div>
+        <div class="action">
+          <button class="btn lg full" type="submit" data-i18n="loginBtn"></button>
+          <a class="center small muted" href="#" onclick="return false" data-i18n="forgot"></a>
+        </div>
+      </form>
+
+      <div class="demo-zones mt2">
+        <div class="muted small" style="font-weight:800"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg> <span data-i18n="demoQuick"></span></div>
+        <button class="demo-btn" data-demo="user">
+          <span class="mono"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+          <span class="dm-t"><b data-i18n="demoUser"></b><span data-i18n="demoUserS"></span></span>
+        </button>
+        <button class="demo-btn" data-demo="admin">
+          <span class="mono"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+          <span class="dm-t"><b data-i18n="demoAdmin"></b><span data-i18n="demoAdminS"></span></span>
+        </button>
+      </div>
+
+      <div class="flex mt2" style="justify-content:flex-end">
+        <span class="muted small" style="margin-inline-end:auto"><span data-i18n="langName"></span></span>
+        <div class="lang-toggle">
+          <button data-lang-btn="ar" class="active">ع</button>
+          <button data-lang-btn="fr">FR</button>
+        </div>
+        <button class="theme-btn" id="themeBtn" type="button" aria-label="theme" style="margin-inline-start:10px"></button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="overlay" id="tfaOv">
+  <div class="modal">
+    <h3 data-i18n="smsTitle"></h3>
+    <p class="msub" data-i18n="smsSub"></p>
+    <div class="field mb"><label data-i18n="smsCode"></label>
+      <input id="tfaCode" inputmode="numeric" value="1234" autocomplete="one-time-code"></div>
+    <div class="err-msg" data-i18n="wrongCode"></div>
+    <div class="flex" style="justify-content:flex-end">
+      <button class="btn line" id="tfaSkip" data-i18n="smsSkip"></button>
+      <button class="btn" id="tfaOk" data-i18n="smsVerify"></button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+  I18n.mount();
+  const db=Store.db();
+  document.getElementById('statUsers').textContent='+'+Helpers.fmtNum(2480);
+  document.getElementById('statTasks').textContent='+'+Helpers.fmtNum(1340);
+  document.getElementById('statCreated').textContent='+'+Helpers.fmtNum(910);
+
+  let role='user';
+  document.querySelectorAll('[data-role]').forEach(b=>b.addEventListener('click',()=>{
+    role=b.getAttribute('data-role');
+    document.querySelectorAll('[data-role]').forEach(x=>x.classList.toggle('active', x===b));
+    const em=document.getElementById('lemail');
+    em.value = role==='admin' ? 'admin@livesight.dz' : 'user@livesight.dz';
+    document.getElementById('lpass').value='';
+  }));
+
+  function doLogin(role, email, pass){
+    const res=Auth.attempt(email, pass);
+    if(res.locked){ showErr('accountLocked'); return; }
+    if(res.banned){ showErr('accountBanned'); return; }
+    if(!res.ok){ showErr('wrongCreds'); return; }
+    if(res.user.role!==role){ showErr('wrongCreds'); return; }
+    const needTfa=Auth.start(res.user.id);
+    if(needTfa==='2fa'){
+      document.querySelector('.overlay').classList.add('show');
+      document.getElementById('tfaCode').focus();
+    } else {
+      goto(res.user.role);
+    }
+  }
+  function showErr(k){
+    const e=document.querySelector('.err-msg'); e.textContent=I18n.t(k); e.classList.add('show');
+    setTimeout(()=>e.classList.remove('show'), 2600);
+  }
+  function goto(r){ location.href = r==='admin' ? 'admin.html' : 'app.html'; }
+
+  document.getElementById('loginForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    doLogin(role, document.getElementById('lemail').value, document.getElementById('lpass').value);
+  });
+  document.querySelectorAll('[data-demo]').forEach(b=>b.addEventListener('click',()=>{
+    const r=b.getAttribute('data-demo');
+    doLogin(r, r==='admin'?'admin@livesight.dz':'user@livesight.dz', r==='admin'?'admin123':'demo123');
+  }));
+  document.getElementById('tfaOk').addEventListener('click',()=>{
+    const s=Auth.current();
+    if(document.getElementById('tfaCode').value.trim()==='1234'){
+      const seen=JSON.parse(localStorage.getItem('ls_seen')||'{}'); seen[s.userId]=true; localStorage.setItem('ls_seen', JSON.stringify(seen));
+      Auth.skipTfa(); document.querySelector('.overlay').classList.remove('show'); goto(s.role);
+    } else { const e=document.getElementById('tfaOv').querySelector('.err-msg'); e.textContent=I18n.t('wrongCode'); e.classList.add('show'); }
+  });
+  document.getElementById('tfaSkip').addEventListener('click',()=>{
+    const s=Auth.current(); const seen=JSON.parse(localStorage.getItem('ls_seen')||'{}'); seen[s.userId]=true; localStorage.setItem('ls_seen', JSON.stringify(seen));
+    Auth.skipTfa(); document.querySelector('.overlay').classList.remove('show'); goto(s.role);
+  });
+  document.querySelectorAll('.overlay [data-mclose]').forEach(b=>b.addEventListener('click',()=>document.querySelector('.overlay').classList.remove('show')));
+  if(Auth.current()){ goto(Auth.current().role); }
+
+  (function(){
+    var btn=document.getElementById('themeBtn'); if(!btn) return;
+    var root=document.documentElement;
+    var SUN='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    var MOON='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+    function render(){ btn.innerHTML = root.getAttribute('data-theme')==='dark' ? SUN : MOON; }
+    render();
+    btn.addEventListener('click',function(){
+      var nxt = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', nxt);
+      try{ localStorage.setItem('ls_theme', nxt); }catch(e){}
+      render();
+    });
+  })();
+</script>
+</body>
+</html>
